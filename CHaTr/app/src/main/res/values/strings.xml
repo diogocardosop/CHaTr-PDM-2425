@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CHaTr</string>
+    <string name="title_habit_add_activity">Adicionar Hábito</string>
+    <string name="title_summary_habit_activity">Resumo de Atividades</string>
+</resources>
