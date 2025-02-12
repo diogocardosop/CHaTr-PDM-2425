@@ -10,7 +10,7 @@ import com.project.chatr.utils.Converters
 
 @TypeConverters(Converters::class)
     @Database(
-        version = 1,
+        version = 3,
         entities = [HabitEntity::class],
         exportSchema = false
     )

@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 class CHaTrViewModel(
     private val cHaTrService: CHaTrService
@@ -87,7 +86,8 @@ class CHaTrViewModel(
     fun removeHabit(habit: Habit) {
         viewModelScope.launch {
             try {
-                cHaTrService.deleteHabitById(habit.id)
+                val habitToRemove = habit.copy(isActive = false)
+                cHaTrService.updateHabitByName(habitToRemove)
                 val currentHabits = _todayHabits.value.toMutableList()
                 currentHabits.remove(habit)
                 _todayHabits.value = currentHabits.toList()

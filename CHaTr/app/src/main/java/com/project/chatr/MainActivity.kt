@@ -23,7 +23,6 @@ import com.project.chatr.screens.summaryHabits.SummaryHabitActivity
 import com.project.chatr.services.CHaTrService
 import com.project.chatr.ui.theme.CHaTrTheme
 import com.project.chatr.utils.ViewModelDefinition
-import com.project.chatr.utils.ViewModelState
 
 
 class MainActivity : ComponentActivity() {

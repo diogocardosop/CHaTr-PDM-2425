@@ -10,4 +10,5 @@ data class Habit (
     val timesPerDay: Int,
     var countTimes: Int,
     val dateCreated: LocalDateTime,
+    val isActive: Boolean
 )
