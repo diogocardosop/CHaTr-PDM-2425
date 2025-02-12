@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -25,12 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.project.chatr.R
 import com.project.chatr.domain.Habit
 import com.project.chatr.utils.ViewModelDefinition
-import com.project.chatr.utils.ViewModelState
 
 class ButtonActions(
     val summaryHabits: (() -> Unit)
@@ -207,42 +200,6 @@ fun DailyTrackerButtons(btnActions: ButtonActions, viewModel: CHaTrViewModel) {
 
 @Composable
 fun HabitItem(habit: Habit, viewModel: CHaTrViewModel) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    val state = viewModel.state.collectAsState().value
-    val screen = viewModel.screen.collectAsState().value
-    var dialogType by rememberSaveable { mutableStateOf<ViewModelState?>(null) }
-
-    LaunchedEffect(state, screen) {
-        if (screen is ViewModelDefinition.Home && (state is ViewModelState.Error || state is ViewModelState.Success && !showDialog)) {
-            showDialog = true
-            dialogType = state
-        }
-    }
-
-    if (showDialog) {
-        when (dialogType) {
-            is ViewModelState.Error -> {
-                AlertDialog(
-                    onDismissRequest = {
-                        showDialog = false
-                        viewModel.resetState()
-                    },
-                    title = { Text(text = stringResource(R.string.error), color = MaterialTheme.colorScheme.primary) },
-                    text = { Text(text = (dialogType as ViewModelState.Error).message) },
-                    confirmButton = {
-                        Button(onClick = {
-                            showDialog = false
-                            viewModel.resetState()
-                        })
-                        {
-                            Text(text = stringResource(R.string.ok))
-                        }
-                    })
-            }
-            else -> {}
-        }
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()

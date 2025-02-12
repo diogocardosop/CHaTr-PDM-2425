@@ -1,7 +1,6 @@
 package com.project.chatr.services
 
 import com.project.chatr.database.AppDatabase
-import com.project.chatr.database.dao.HabitDao
 import com.project.chatr.database.model.HabitEntity
 import com.project.chatr.domain.Habit
 import com.project.chatr.domain.HabitSummary
@@ -73,7 +72,7 @@ class CHaTrService (private val db: AppDatabase
 
         val totalHabits = todayHabits.plus(activeHabitsNotDoneToday)
 
-        return totalHabits;
+        return totalHabits
 
     }
 
@@ -106,10 +105,10 @@ class CHaTrService (private val db: AppDatabase
 
         val daysByCompletedHabit = completedHabits.groupBy { it.name }
 
-        return daysByCompletedHabit.map {
+        return daysByCompletedHabit.map { entry ->
             HabitSummary(
-                habitName = it.key,
-                daysCompleted = it.value.map { it.dateCreated.dayOfWeek }
+                habitName = entry.key,
+                daysCompleted = entry.value.map { it.dateCreated.dayOfWeek }
             )
 
         }

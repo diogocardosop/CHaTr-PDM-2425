@@ -30,7 +30,6 @@ fun SummaryHabitScreen(
     modifier: Modifier = Modifier,
     viewModel: SummaryHabitViewModel
 ) {
-    // Dummy data for demonstration
     val habitSummaries = viewModel.weekHabits.collectAsState().value
 
     Column(
