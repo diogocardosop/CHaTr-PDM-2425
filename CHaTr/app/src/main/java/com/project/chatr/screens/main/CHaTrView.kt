@@ -19,28 +19,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.chatr.R
-
-data class Habit(
-    val name: String,
-    var isCompleted: Boolean = false,
-    var count: Int = 1,
-    var final: Int = 10
-)
+import com.project.chatr.domain.Habit
+import com.project.chatr.utils.ViewModelDefinition
 
 class ButtonActions(
-    val habitAdd: (() -> Unit),
     val summaryHabits: (() -> Unit)
 )
 
@@ -53,38 +45,32 @@ fun CHaTrView(
     val screenOrientation = LocalConfiguration.current.orientation
 
     when (screenOrientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> CHaTrLandscapeView(modifier, btnActions)
-        else -> CHaTrPortraitView(modifier, btnActions)
+        Configuration.ORIENTATION_LANDSCAPE -> CHaTrLandscapeView(modifier, btnActions, viewModel)
+        else -> CHaTrPortraitView(modifier, btnActions, viewModel)
     }
 }
 
 @Composable
 fun CHaTrPortraitView(
     modifier: Modifier = Modifier,
-    btnActions: ButtonActions
+    btnActions: ButtonActions,
+    viewModel: CHaTrViewModel
 ) {
-    DailyTrackerList(modifier, btnActions)
+    DailyTrackerList(modifier, btnActions, viewModel)
 }
 
 @Composable
 fun CHaTrLandscapeView(
     modifier: Modifier = Modifier,
-    btnActions: ButtonActions
+    btnActions: ButtonActions,
+    viewModel: CHaTrViewModel
 ) {
-    DailyTrackerList(modifier, btnActions)
+    DailyTrackerList(modifier, btnActions, viewModel)
 }
 
 @Composable
-fun DailyTrackerList(modifier: Modifier = Modifier, btnActions: ButtonActions) {
-    val habits = remember {
-        mutableStateListOf(
-            Habit("Drink Water"),
-            Habit("Exercise"),
-            Habit("Meditate"),
-            Habit("Read"),
-            Habit("Eat Healthy")
-        )
-    }
+fun DailyTrackerList(modifier: Modifier = Modifier, btnActions: ButtonActions, viewModel: CHaTrViewModel) {
+    val habits = viewModel.todayHabits.collectAsState().value
 
     Column(
         modifier = modifier
@@ -104,7 +90,7 @@ fun DailyTrackerList(modifier: Modifier = Modifier, btnActions: ButtonActions) {
             modifier = Modifier.weight(1f)
         ) {
             items(habits) { habit ->
-                HabitItem(habit = habit)
+                HabitItem(habit = habit, viewModel)
             }
         }
 
@@ -124,7 +110,7 @@ fun DailyTrackerList(modifier: Modifier = Modifier, btnActions: ButtonActions) {
             }
 
             Button(
-                onClick = { btnActions.habitAdd() }
+                onClick = { viewModel.updateViewModelScreen(ViewModelDefinition.Adding) }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_add_circle_outline_24),
@@ -136,7 +122,7 @@ fun DailyTrackerList(modifier: Modifier = Modifier, btnActions: ButtonActions) {
 }
 
 @Composable
-fun HabitItem(habit: Habit) {
+fun HabitItem(habit: Habit, viewModel: CHaTrViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -146,7 +132,7 @@ fun HabitItem(habit: Habit) {
         Row(
             modifier = Modifier
                 .background(color =
-                if (habit.isCompleted) Color(0xB58EF38E) else if (habit.count > 0) Color(0xFFF6E98A) else Color(
+                if (habit.countTimes >= habit.timesPerDay) Color(0xB58EF38E) else if (habit.countTimes > 0) Color(0xFFF6E98A) else Color(
                     0xB5FC8585
                 )
                 )
@@ -161,33 +147,43 @@ fun HabitItem(habit: Habit) {
                     text = habit.name
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                if (habit.final > 0) {
-                    Text(text = "(${habit.final})")
+                if (habit.timesPerDay > 0) {
+                    Text(text = "(${habit.timesPerDay})")
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { if (habit.count > 0) habit.count-- }) {
+                IconButton(onClick = {
+                    if (habit.countTimes > 0) {
+                        val updatedHabit = habit.copy(countTimes = habit.countTimes - 1)
+                        viewModel.updateHabit(updatedHabit)
+                    }
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_arrow_downward_24),
                         contentDescription = "Less"
                     )
                 }
                 Text(
-                    text = habit.count.toString()
+                    text = habit.countTimes.toString()
                 )
-                IconButton(onClick = { habit.count++ }) {
+                IconButton(onClick = {
+                    val updatedHabit = habit.copy(countTimes = habit.countTimes + 1)
+                    viewModel.updateHabit(updatedHabit)
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_arrow_upward_24),
                         contentDescription = "More"
                     )
                 }
+                IconButton(onClick = {
+                    viewModel.removeHabit(habit)
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_delete_24),
+                        contentDescription = "Remove"
+                    )
+                }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DailyTrackerListPreview() {
-    DailyTrackerList(btnActions = ButtonActions(summaryHabits = {}, habitAdd = {}))
 }

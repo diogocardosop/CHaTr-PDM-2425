@@ -7,9 +7,10 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "habits")
 data class HabitEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
+    val description: String,
     val timesPerDay: Int,
     val countTimes: Int,
-    val DateCreated: LocalDateTime,
+    val dateCreated: LocalDateTime,
 )

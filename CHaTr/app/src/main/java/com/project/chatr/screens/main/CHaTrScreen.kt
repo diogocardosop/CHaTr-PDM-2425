@@ -12,7 +12,6 @@ import com.project.chatr.screens.components.NavigationActions
 fun CHaTrScreen(
     modifier: Modifier = Modifier,
     SummaryHabits: () -> Unit,
-    HabitAdd: () -> Unit,
     viewModel: CHaTrViewModel,
 
 ) {
@@ -31,8 +30,7 @@ fun CHaTrScreen(
             modifier = modifier
                 .padding(innerPadding),
             btnActions = ButtonActions(
-                summaryHabits = SummaryHabits,
-                habitAdd = HabitAdd,
+                summaryHabits = SummaryHabits
             ),
             viewModel = viewModel
         )
