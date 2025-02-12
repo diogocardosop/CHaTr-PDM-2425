@@ -104,9 +104,15 @@ class CHaTrService (private val db: AppDatabase
 
         val completedHabits = habits.filter { it.countTimes >= it.timesPerDay }
 
+        val daysByCompletedHabit = completedHabits.groupBy { it.name }
 
+        return daysByCompletedHabit.map {
+            HabitSummary(
+                habitName = it.key,
+                daysCompleted = it.value.map { it.dateCreated.dayOfWeek }
+            )
 
-        return emptyList();
+        }
     }
 
 
