@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">CHaTr</string>
-    <string name="title_habit_add_activity">Adicionar Hábito</string>
-    <string name="title_summary_habit_activity">Resumo de Atividades</string>
+    <string name="title_habit_add_activity">Add Habit</string>
+    <string name="title_summary_habit_activity">Activity Resume</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="success">Success</string>
+    <string name="addWithSucess">Added with Success</string>
+    <string name="nameLabel">Name</string>
+    <string name="descriptionLabel">Description</string>
+    <string name="timesDay">How Many Times a Day</string>
+    <string name="invalidNum">Invalid number</string>
+    <string name="addItem">Add Item</string>
+    <string name="dailyTracker">Daily Tracker</string>
+    <string name="noResults">No habits added yet!</string>
+    <string name="removeHabit">Habit Removed with success</string>
 </resources>

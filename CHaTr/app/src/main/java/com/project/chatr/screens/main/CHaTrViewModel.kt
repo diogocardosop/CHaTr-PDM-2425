@@ -53,7 +53,6 @@ class CHaTrViewModel(
         viewModelScope.launch {
             try {
                 _todayHabits.value = cHaTrService.getHabitsOfDay(LocalDate.now().atStartOfDay())
-                viewModelState.value = ViewModelState.Loading
             } catch (e: Exception) {
                 viewModelState.value = ViewModelState.Error(
                     e.message ?: "Something went wrong loading habits of today!"
@@ -72,7 +71,6 @@ class CHaTrViewModel(
                     currentHabits[index] = habit.copy()
                     _todayHabits.value = currentHabits
                 }
-                viewModelState.value = ViewModelState.Success
                 }
             catch (e: Exception) {
                 viewModelState.value = ViewModelState.Error(
@@ -90,8 +88,8 @@ class CHaTrViewModel(
                 cHaTrService.updateHabitByName(habitToRemove)
                 val currentHabits = _todayHabits.value.toMutableList()
                 currentHabits.remove(habit)
-                _todayHabits.value = currentHabits.toList()
                 viewModelState.value = ViewModelState.Success
+                _todayHabits.value = currentHabits.toList()
             } catch (e: Exception) {
                 viewModelState.value = ViewModelState.Error(
                     e.message ?: "Something went wrong while deleting Habit!"

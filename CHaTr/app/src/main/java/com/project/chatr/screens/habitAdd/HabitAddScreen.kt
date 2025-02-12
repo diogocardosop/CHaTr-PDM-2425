@@ -21,19 +21,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.project.chatr.R
 import com.project.chatr.screens.main.CHaTrViewModel
+import com.project.chatr.utils.ViewModelDefinition
 import com.project.chatr.utils.ViewModelState
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.text.isNotBlank
 import kotlin.text.toIntOrNull
 
@@ -58,11 +55,12 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
 
     val state = viewModel.state.collectAsState().value
     var isError by rememberSaveable { mutableStateOf(false) }
+    val screen = viewModel.screen.collectAsState().value
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var dialogType by rememberSaveable { mutableStateOf<ViewModelState?>(null) }
 
     LaunchedEffect(state) {
-        if (state is ViewModelState.Error || state is ViewModelState.Success) {
+        if (screen is ViewModelDefinition.Adding && (state is ViewModelState.Error || state is ViewModelState.Success)) {
             showDialog = true
             dialogType = state
         }
@@ -76,7 +74,7 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                         showDialog = false
                         viewModel.resetState()
                     },
-                    title = { Text(text = "ERROR", color = MaterialTheme.colorScheme.primary) },
+                    title = { Text(text = stringResource(R.string.error), color = MaterialTheme.colorScheme.primary) },
                     text = { Text(text = (dialogType as ViewModelState.Error).message) },
                     confirmButton = {
                         Button(onClick = {
@@ -84,7 +82,7 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                             viewModel.resetState()
                         })
                         {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.ok))
                         }
                     })
             }
@@ -95,15 +93,15 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                         showDialog = false
                         viewModel.resetState()
                     },
-                    title = { Text(text = "SUCESSO", color = MaterialTheme.colorScheme.primary) },
-                    text = { Text(text = "Adicionado com Sucesso") },
+                    title = { Text(text = stringResource(R.string.success), color = MaterialTheme.colorScheme.primary) },
+                    text = { Text(text = stringResource(R.string.addWithSucess)) },
                     confirmButton = {
                         Button(onClick = {
                             showDialog = false
                             viewModel.resetState()
                         })
                         {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.ok))
                         }
                     })
             }
@@ -117,6 +115,12 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
             .padding(16.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
+
+        Text(
+            text = stringResource(R.string.title_habit_add_activity),
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,7 +136,7 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.nameLabel)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
@@ -142,7 +146,7 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(R.string.descriptionLabel)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
@@ -155,14 +159,14 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
                         timesPerDay = it
                         isError = it.toIntOrNull() == null
                     },
-                    label = { Text("How Many Times a Day") },
+                    label = { Text(stringResource(R.string.timesDay)) },
                     modifier = Modifier.fillMaxWidth(),
                     isError = isError,
                     shape = RoundedCornerShape(8.dp)
                 )
                 if (isError) {
                     Text(
-                        text = "Invalid number",
+                        text = stringResource(R.string.invalidNum),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 4.dp)
@@ -186,7 +190,7 @@ fun AddItem(viewModel: CHaTrViewModel, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text("Add Item", color = Color.White)
+            Text(stringResource(R.string.addItem), color = Color.White)
         }
     }
 }
