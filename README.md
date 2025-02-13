@@ -1,8 +1,8 @@
 # CHaTr-PDM-2425
 
 - Autor: Diogo Miguel Ribeio Cardoso
-- Nº: 43508 
-- email: a
+- Nº: 43508
+- email: A43508@alunos.isel.pt
 
 ## Descrição
 
