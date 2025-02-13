@@ -1,6 +1,8 @@
 # CHaTr-PDM-2425
 
 - Autor: Diogo Miguel Ribeio Cardoso
+- Nº: 43508 
+- email: a
 
 ## Descrição
 
@@ -16,4 +18,4 @@
 ## Links
 
 - [Github](https://github.com/diogocardosop/CHaTr-PDM-2425)
-- [Youtube](https://www.youtube.com/)
+- [Youtube](https://www.youtube.com/watch?v=LapQ_WPJqUk)
